@@ -7,6 +7,7 @@ const getAllDishes = async (req,res) => {
         data,
         message:"Request Successful."
     })
+    return
 }
 
 module.exports = getAllDishes
