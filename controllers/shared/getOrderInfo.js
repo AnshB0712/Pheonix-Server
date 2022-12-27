@@ -1,9 +1,8 @@
 const Order = require('../../models/Order')
-const BadRequestError = require('../../errors')
+const {BadRequestError} = require('../../errors')
 
 const getOrderInfo = async (req,res) => {
     const { orderId } = req.query
-    console.log(orderId)
     if(!orderId) throw new BadRequestError()
 
     const order = await Order.findOne({_id: orderId})
