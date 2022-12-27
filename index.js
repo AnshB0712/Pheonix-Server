@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 const authRouter = require('./routes/auth');
 const adminRouter = require("./routes/admin");
 const userRouter = require("./routes/user");
+const sharedRouter = require("./routes/shared");
 
 const errorHandler = require("./middlewares/errorHandler");
 const isUserAdmin = require("./middlewares/isUserAdmin");
@@ -28,6 +29,7 @@ app.use(express.urlencoded({extended:false}))
 app.use(cookieParser())
 
 // ONLY PUBLIC ROUTES FOR THE WHOLE SERVER //
+app.use("/shared",sharedRouter)
 app.get('/',getAllDishes)
 app.get('/renew',renewToken)
 
@@ -43,6 +45,8 @@ app.use('/admin',isUserAdmin,adminRouter)
 
 //---- ONLY NORMAL USER CAN ACCESS THIS ROUTER ----//
 app.use("/user",isUserANormalUser,userRouter)
+
+//---- ONLY LOGGED IN USER CAN ACCESS THIS ROUTER ----//
 
 // ERROR HANDLER //
 app.use(errorHandler)
