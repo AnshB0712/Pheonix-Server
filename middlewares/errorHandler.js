@@ -10,7 +10,7 @@ const errorHandler = (err,req,res,next) => {
     if(err.name === "ValidationError")
     return res.status(400).json({message: err.message})
 
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: "Something went wrong!"})
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: "Something went wrong!"+err.message})
 }
 
 module.exports = errorHandler

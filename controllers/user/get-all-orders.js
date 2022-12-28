@@ -1,10 +1,10 @@
 const Order = require("../../models/Order")
 
 const getAllOrders = async (req,res) => {
-    const {id} = req.body
-    const results = await Order.find({orderBy:id})
+    const {userId} = req.query
+    const results = await Order.find({orderBy:userId})
     res.status(200).json({
-        message: `All the orders created by userID ${id}`,
+        message: `All the orders created by userID ${userId}`,
         data: results,
         length: results.length
     })

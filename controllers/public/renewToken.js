@@ -3,8 +3,7 @@ const JWT = require('jsonwebtoken');
 const User = require("../../models/User");
 
 const renewToken = async (req,res) => {
-    const {cookie:{refresh}} = req.cookies
-
+    const {refresh} = req.cookies
     if(!refresh){
         throw new UnAuthorizedError("No Token Found, Please Login/SignUp Again.")
     }

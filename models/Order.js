@@ -33,10 +33,18 @@ const Order = new mongoose.Schema({
                 type: String,
                 required: [true,"Item name is required to create orders!"]
             },
+            itemId:{
+                type: mongoose.Schema.Types.ObjectId,
+                required: [true,"Item name is required to create orders!"]
+            },
             qty:{
                 type: Number,
                 required: [true,"Quantity is required to create orders!"]
             },
+            perPrice:{
+                type: Number,
+                required: [true,"PerPrice is required to create orders!"]
+            }
         }
     ],
     PaymentStatus: {
