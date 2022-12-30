@@ -18,9 +18,10 @@ const start = require('./config/start');
 const getAllDishes = require("./controllers/public/getAllDishes");
 const renewToken = require("./controllers/public/renewToken");
 const getDishFromId = require("./controllers/public/getDishFromId");
+const paymentRouter = require("./routes/payment");
 
 app.use(require('cors')({
-    origin:'http://localhost:5173', 
+    origin:['http://localhost:5173','http://localhost:3001'], 
     credentials:true,            //access-control-allow-credentials:true
     optionSuccessStatus:200
 }))
@@ -40,6 +41,7 @@ app.use('/auth',authRouter)
 
 //---- ONLY AUTHENTICATE USER CAN ACCESS THE FURTHER ROUTER'S ----//
 app.use(verifyJWT)
+app.use('/payment',paymentRouter)
 // app.get("/test",(req,res) => {res.json({message:"test"})})
 
 //---- ONLY ADMIN USER CAN ACCESS THE ADMIN ROUTER ----//
