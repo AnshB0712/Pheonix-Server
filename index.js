@@ -19,6 +19,7 @@ const getAllDishes = require("./controllers/public/getAllDishes");
 const renewToken = require("./controllers/public/renewToken");
 const getDishFromId = require("./controllers/public/getDishFromId");
 const paymentRouter = require("./routes/payment");
+const paymentStatusController = require('./controllers/payment/paymentStatusController');
 
 app.use(require('cors')({
     origin:['http://localhost:5173','http://localhost:3001'], 
@@ -32,6 +33,7 @@ app.use(cookieParser())
 
 // ONLY PUBLIC ROUTES FOR THE WHOLE SERVER //
 app.use("/shared",sharedRouter)
+app.post('/paytm-status',paymentStatusController)
 app.get('/',getAllDishes)
 app.get('/get-dish-from-id',getDishFromId)
 app.get('/renew',renewToken)
