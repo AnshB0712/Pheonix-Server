@@ -20,7 +20,7 @@ const Order = new mongoose.Schema({
     },
     orderStatus:{
         type: String,
-        enum: ["SXS","PNDG"],
+        enum: ["SXS","PNDG","FLD"],
         default: "PNDG"
     },
     amount: {
@@ -47,7 +47,7 @@ const Order = new mongoose.Schema({
             }
         }
     ],
-    PaymentStatus: {
+    paymentStatus: {
         type: String,
         enum: ["SXS","PNDG","FLD"],
         default: "PNDG"

@@ -3,10 +3,12 @@ const { BadRequestError } = require('../errors');
 
 const verifyJWT = async (req,res,next) => {
     const token = req.headers?.authorization?.split(' ')[1]
-    if(!token)
+    const { refresh } = req.cookies
+
+    if(!token && !refresh)
     throw new BadRequestError("Token is not present or compromised, Please login/signup!")
 
-    const decode = await JWT.verify(token,process.env.ACCESS_TOKEN_SECRET)
+    const decode = await JWT.verify(token || refresh ,process.env.ACCESS_TOKEN_SECRET)
     req.user = {...decode}
     next()
 }

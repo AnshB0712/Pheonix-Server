@@ -1,9 +1,8 @@
 const https = require('https');
-const { Module } = require('module');
 const PaytmChecksum = require('./PaytmChecksum');
 
 const paymentController = (req,res) => {
-  const {orderId,userId} = req.body
+  const {orderId,userId,amount} = req.body
   var paytmParams = {};
 
 paytmParams.body = {
@@ -11,9 +10,9 @@ paytmParams.body = {
     "mid"           : process.env.PAYTM_M_ID,
     "websiteName"   : "WEBSTAGING",
     "orderId"       : orderId,
-    "callbackUrl"   : "https://pheonix-server.vercel.app/payment/paytm-status",
+    "callbackUrl"   : "http://localhost:3000/payment/paytm-status",
     "txnAmount"     : {
-        "value"     : "1.00",
+        "value"     : ""+amount,
         "currency"  : "INR",
     },
     "userInfo"      : {
