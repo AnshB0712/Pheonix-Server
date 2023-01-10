@@ -38,8 +38,6 @@ const getDishFromId = require("./controllers/public/getDishFromId");
 const { logger } = require("./middlewares/logger");
 const getAllTodaysOrders = require("./controllers/admin/getAllTodaysOrders");
 
-app.use(logger)
-
 app.use(require('cors')({
     origin:['http://localhost:5173'], 
     credentials:true,            //access-control-allow-credentials:true
