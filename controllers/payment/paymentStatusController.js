@@ -11,7 +11,7 @@ const paymentStatusController = async (req,res) => {
 
     await Order.findByIdAndUpdate(response.ORDERID,{paymentStatus,orderStatus: paymentStatus == 'SXS' ? "PNDG" : "FLD"})
 
-    res.redirect(301,'http://localhost:5173/order/'+response.ORDERID)
+    res.redirect(301,'http://localhost:3000/order/'+response.ORDERID)
 }
 
 module.exports = paymentStatusController
