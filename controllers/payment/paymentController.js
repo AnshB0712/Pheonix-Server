@@ -10,7 +10,7 @@ paytmParams.body = {
     "mid"           : process.env.PAYTM_M_ID,
     "websiteName"   : "WEBSTAGING",
     "orderId"       : orderId,
-    "callbackUrl"   : "https://pheonix-server.vercel.app/payment/paytm-status",
+    "callbackUrl"   : "https://pheonix-server-two.onrender.com/payment/paytm-status",
     "txnAmount"     : {
         "value"     : ""+amount,
         "currency"  : "INR",
