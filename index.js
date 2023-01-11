@@ -17,6 +17,7 @@ const io = new Server(httpServer, {
 
 io.of('admin/todays-orders').on("connection", (socket) => {
   console.log('Socket connected to admin/todays-orders')
+  console.log(socket.handshake)
   getAllTodaysOrders(socket)
 });
 
