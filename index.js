@@ -10,7 +10,7 @@ const { Server } = require("socket.io");
 const httpServer = createServer(app);
 const io = new Server(httpServer, {  
     cors: {
-      origin: "8",
+      origin: "*",
       methods: ["GET", "POST"],
       credentials: true,
       transports: ['websocket', 'polling'],
