@@ -10,9 +10,12 @@ const { Server } = require("socket.io");
 const httpServer = createServer(app);
 const io = new Server(httpServer, {  
     cors: {
-        origin: '*',
-        credentials: true
-      }
+      origin: "http://localhost:5173/",
+      methods: ["GET", "POST"],
+      credentials: true,
+      transports: ['websocket', 'polling'],
+      },
+      allowEIO3: true
 });
 
 io.of('admin/todays-orders').on("connection", (socket) => {
