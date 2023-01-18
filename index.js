@@ -11,7 +11,7 @@ const { Server } = require("socket.io");
 const httpServer = createServer(app);
 const io = new Server(httpServer, {  
     cors: {
-      origin: "http://localhost:5173",
+      origin: "https://pheonix-frontend.vercel.app",
       credentials: true
       }
 });
@@ -46,7 +46,7 @@ io.of('admin/todays-orders')
 
 
 app.use(require('cors')({
-  origin: 'https://pheonix-frontend.vercel.app/',
+  origin: 'https://pheonix-frontend.vercel.app',
   credentials: true
 }))
 
