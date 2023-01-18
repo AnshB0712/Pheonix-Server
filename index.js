@@ -46,7 +46,7 @@ io.of('admin/todays-orders')
 
 
 app.use(require('cors')({
-  origin: 'http://localhost:5173',
+  origin: 'https://pheonix-frontend.vercel.app/',
   credentials: true
 }))
 
