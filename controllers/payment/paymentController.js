@@ -1,5 +1,5 @@
 const https = require('https');
-const { PAYTM_M_KEY, PAYTM_M_ID } = require('../../variables');
+const { PAYTM_M_KEY, PAYTM_M_ID, BACKEND_URL } = require('../../variables');
 const PaytmChecksum = require('./PaytmChecksum');
 
 const paymentController = (req,res) => {
@@ -11,7 +11,7 @@ paytmParams.body = {
     "mid"           : PAYTM_M_ID,
     "websiteName"   : "WEBSTAGING",
     "orderId"       : orderId,
-    "callbackUrl"   : "https://pheonix-server-two.onrender.com/payment/paytm-status",
+    "callbackUrl"   : `${BACKEND_URL}/payment/paytm-status`,
     "txnAmount"     : {
         "value"     : ""+amount,
         "currency"  : "INR",
