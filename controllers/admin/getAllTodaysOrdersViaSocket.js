@@ -1,6 +1,6 @@
 const Order = require("../../models/Order")
 
-const getAllTodaysOrders = (socket) => {
+const getAllTodaysOrdersViaSocket = (socket) => {
     Order.watch([],{ fullDocument: "updateLookup" }).on('change',(data) => {
         const {operationType} = data
         if(
@@ -14,4 +14,4 @@ const getAllTodaysOrders = (socket) => {
     });
 }
 
-module.exports = getAllTodaysOrders
+module.exports = getAllTodaysOrdersViaSocket

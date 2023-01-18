@@ -1,12 +1,17 @@
 const Order = require("../../models/Order")
 
 const getAllOrders = async (req,res) => {
-    const {userId} = req.query
-    const results = await Order.find({orderBy:userId})
+    const {userId,page} = req.query
+    const limit = 10
+    const pageInNumberType = Number(page)
+    const totalOrders = await Order.countDocuments({orderBy: userId})
+    const results = await Order.find({orderBy:userId}).limit(limit).skip(limit*(pageInNumberType-1))
     res.status(200).json({
         message: `All the orders created by userID ${userId}`,
         data: results,
-        length: results.length
+        totalOrders,
+        page: pageInNumberType,
+        totalPages: Math.ceil(totalOrders/limit)
     })
 }
 
