@@ -4,7 +4,7 @@ const User = require("../../models/User");
 const PaytmChecksum = require("./PaytmChecksum");
 const JWT = require('jsonwebtoken');
 const Transaction = require("../../models/Transaction");
-const { PAYTM_M_KEY } = require("../../variables");
+const { PAYTM_M_KEY, FRONTEND_URL } = require("../../variables");
 
 const paymentStatusController = async (req,res) => {
 
@@ -94,7 +94,7 @@ const paymentStatusController = async (req,res) => {
     await Order.findByIdAndUpdate(response.ORDERID,{paymentStatus,orderStatus: paymentStatus == 'SXS' ? "PNDG" : "FLD"})
     await Transaction.create(data)
 
-    res.redirect(301,`${response.ORDERID}`)
+    res.redirect(301,`${FRONTEND_URL}/${response.ORDERID}`)
 }
 
 module.exports = paymentStatusController
