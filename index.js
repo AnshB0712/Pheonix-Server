@@ -1,5 +1,5 @@
-require("dotenv").config()
 require('express-async-errors');
+const { FRONTEND_URL } = require('./variables');
 
 const express = require('express');
 const app = express()
@@ -11,7 +11,7 @@ const { Server } = require("socket.io");
 const httpServer = createServer(app);
 const io = new Server(httpServer, {  
     cors: {
-      origin: "http://localhost:5173",
+      origin: FRONTEND_URL,
       credentials: true
       }
 });
@@ -46,7 +46,7 @@ io.of('admin/todays-orders')
 
 
 app.use(require('cors')({
-  origin: 'https://pheonix-frontend.vercel.app/',
+  origin: FRONTEND_URL,
   credentials: true
 }))
 

@@ -1,4 +1,5 @@
 const https = require('https');
+const { PAYTM_M_KEY, PAYTM_M_ID } = require('../../variables');
 const PaytmChecksum = require('./PaytmChecksum');
 
 const paymentController = (req,res) => {
@@ -7,7 +8,7 @@ const paymentController = (req,res) => {
 
 paytmParams.body = {
     "requestType"   : "Payment",
-    "mid"           : process.env.PAYTM_M_ID,
+    "mid"           : PAYTM_M_ID,
     "websiteName"   : "WEBSTAGING",
     "orderId"       : orderId,
     "callbackUrl"   : "https://pheonix-server-two.onrender.com/payment/paytm-status",
@@ -24,7 +25,7 @@ paytmParams.body = {
 * Generate checksum by parameters we have in body
 * Find your Merchant Key in your Paytm Dashboard at https://dashboard.paytm.com/next/apikeys 
 */
-PaytmChecksum.generateSignature(JSON.stringify(paytmParams.body), process.env.PAYTM_M_KEY).then(function(checksum){
+PaytmChecksum.generateSignature(JSON.stringify(paytmParams.body), PAYTM_M_KEY).then(function(checksum){
 
     paytmParams.head = {
         "signature"    : checksum
@@ -41,7 +42,7 @@ PaytmChecksum.generateSignature(JSON.stringify(paytmParams.body), process.env.PA
         // hostname: 'securegw.paytm.in',
 
         port: 443,
-        path: `/theia/api/v1/initiateTransaction?mid=${process.env.PAYTM_M_ID}&orderId=${orderId}`,
+        path: `/theia/api/v1/initiateTransaction?mid=${PAYTM_M_ID}&orderId=${orderId}`,
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

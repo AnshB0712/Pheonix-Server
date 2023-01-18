@@ -4,6 +4,7 @@ const User = require("../../models/User");
 const PaytmChecksum = require("./PaytmChecksum");
 const JWT = require('jsonwebtoken');
 const Transaction = require("../../models/Transaction");
+const { PAYTM_M_KEY } = require("../../variables");
 
 const paymentStatusController = async (req,res) => {
 
@@ -16,7 +17,7 @@ const paymentStatusController = async (req,res) => {
         throw new UnAuthorizedError("No Token Found, Please Login/SignUp Again.")
     }
 
-    JWT.verify(refresh,process.env.REFRESH_TOKEN_SECRET,function(err,decoded){
+    JWT.verify(refresh,REFRESH_TOKEN_SECRET,function(err,decoded){
         if(err)
             throw ForbiddenError('Token is Expired')
         console.log(decoded)
@@ -57,7 +58,7 @@ const paymentStatusController = async (req,res) => {
     }
     var isVerifySignature = PaytmChecksum.verifySignature(
       paytmParams,
-      process.env.PAYTM_M_KEY,
+      PAYTM_M_KEY,
       paytmChecksum
     );
     console.log({isVerifySignature,paytmParams,paytmChecksum})
@@ -93,7 +94,7 @@ const paymentStatusController = async (req,res) => {
     await Order.findByIdAndUpdate(response.ORDERID,{paymentStatus,orderStatus: paymentStatus == 'SXS' ? "PNDG" : "FLD"})
     await Transaction.create(data)
 
-    res.redirect(301,'http://localhost:5173/order/'+response.ORDERID)
+    res.redirect(301,`${response.ORDERID}`)
 }
 
 module.exports = paymentStatusController

@@ -2,6 +2,7 @@ const { UnAuthorizedError, BadRequestError, ForbiddenError } = require("../../er
 const JWT = require('jsonwebtoken');
 const User = require("../../models/User");
 const AdminUsers = require("../../models/AdminUsers");
+const { REFRESH_TOKEN_SECRET, ACCESS_TOKEN_SECRET, ACCESS_TOKEN_EXP } = require("../../variables");
 
 const renewToken = async (req,res) => {
     const {refresh} = req.cookies
@@ -13,7 +14,7 @@ const renewToken = async (req,res) => {
         throw new UnAuthorizedError("No Token Found, Please Login/SignUp Again.")
     }
     
-    JWT.verify(refresh,process.env.REFRESH_TOKEN_SECRET,function(err,decodedToken){
+    JWT.verify(refresh,REFRESH_TOKEN_SECRET,function(err,decodedToken){
         if(err)
             throw ForbiddenError('Token is expired')
             
@@ -25,7 +26,7 @@ const renewToken = async (req,res) => {
         ACCESS_TOKEN = JWT.sign({
             role: targetUser.role,
             mobile: targetUser.mobile
-        },process.env.ACCESS_TOKEN_SECRET,{expiresIn:process.env.ACCESS_TOKEN_EXP})
+        },ACCESS_TOKEN_SECRET,{expiresIn: ACCESS_TOKEN_EXP})
 
     }
 
@@ -34,7 +35,7 @@ const renewToken = async (req,res) => {
         ACCESS_TOKEN = JWT.sign({
             role: targetUser.role,
             mobile: targetUser.username
-        },process.env.ACCESS_TOKEN_SECRET,{expiresIn:process.env.ACCESS_TOKEN_EXP})
+        },ACCESS_TOKEN_SECRET,{expiresIn:ACCESS_TOKEN_EXP})
     }
 
     if(!targetUser){

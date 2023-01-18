@@ -1,6 +1,7 @@
 const { BadRequestError, UnAuthorizedError } = require("../../errors")
 const JWT = require('jsonwebtoken');
-const Adminuser = require("../../models/AdminUsers")
+const Adminuser = require("../../models/AdminUsers");
+const { ACCESS_TOKEN_EXP, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_EXP } = require("../../variables");
 
 const adminLogin = async (req,res) => {
     const { username,password} = req.body
@@ -22,12 +23,12 @@ const adminLogin = async (req,res) => {
     const ACCESS_TOKEN = JWT.sign({
         role: Admin.role,
         username: Admin.username
-      },process.env.ACCESS_TOKEN_SECRET,{expiresIn:process.env.ACCESS_TOKEN_EXP})
+      },ACCESS_TOKEN_SECRET,{expiresIn:ACCESS_TOKEN_EXP})
   
       const REFRESH_TOKEN = JWT.sign({
         role: Admin.role,
         username: Admin.username
-      },process.env.REFRESH_TOKEN_SECRET,{expiresIn:process.env.REFRESH_TOKEN_EXP})
+      },REFRESH_TOKEN_SECRET,{expiresIn:REFRESH_TOKEN_EXP})
   
       res.cookie('refresh',REFRESH_TOKEN, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 })
 
