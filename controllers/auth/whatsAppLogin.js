@@ -5,6 +5,7 @@ const { APP_ID, APP_SECRET, ACCESS_TOKEN_SECRET, ACCESS_TOKEN_EXP, REFRESH_TOKEN
 
 const whatsAppLogin = async (req,res) => {
   const {token ,state} = req.body;
+  console.log({token ,state})
   const {data:{data:{name,mobile}}} = await axios.post('https://api.otpless.app/v1/client/user/session/userdata',{token,state},{
     headers:{
         'content-type': 'application/json',

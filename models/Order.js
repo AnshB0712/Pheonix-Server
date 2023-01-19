@@ -27,6 +27,10 @@ const Order = new mongoose.Schema({
         type: Number,
         required: [true,"Amount is required to create orders!"]
     },
+    takeOutCharges: {
+        type: Number,
+        default: 0
+    },
     items: [
         {
             itemName:{
