@@ -57,7 +57,14 @@ PaytmChecksum.generateSignature(JSON.stringify(paytmParams.body), PAYTM_M_KEY).t
         });
 
         post_res.on('end', function(){
-            res.json({response: JSON.parse(response)})
+            try {
+              const serverResponse = JSON.parse(response)
+              res.json({response: serverResponse})
+            } catch (error) {
+              strippedResponse = response.replace(/<[^>]+>/g, '');
+              console.log(strippedResponse)
+              res.status(500).send(strippedResponse)
+            }
         });
     });
 

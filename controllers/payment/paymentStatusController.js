@@ -61,7 +61,6 @@ const paymentStatusController = async (req,res) => {
       PAYTM_M_KEY,
       paytmChecksum
     );
-    console.log({isVerifySignature,paytmParams,paytmChecksum})
     if (!isVerifySignature) {
       res.status(400).json({ message: "Checksum Mismatched , retry" });
     }
