@@ -14,7 +14,7 @@ const getAllTodaysOrdersViaREST = async (req,res) => {
         },
         orderStatus: 'PNDG',
         paymentStatus: 'SXS'
-    })
+    }).sort({createdAt: -1})
 
     res.json({
         message: 'request done successfully.',

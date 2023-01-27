@@ -1,7 +1,7 @@
 const { BadRequestError, UnAuthorizedError } = require("../../errors")
 const JWT = require('jsonwebtoken');
 const Adminuser = require("../../models/AdminUsers");
-const { ACCESS_TOKEN_EXP, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_EXP } = require("../../variables");
+const { ACCESS_TOKEN_EXP, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_EXP, ACCESS_TOKEN_SECRET } = require("../../variables");
 
 const adminLogin = async (req,res) => {
     const { username,password} = req.body
