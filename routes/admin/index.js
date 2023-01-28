@@ -11,6 +11,7 @@ const getDishDetails = require('../../controllers/admin/getDishDetails');
 const getOrderViaMobile = require('../../controllers/admin/getOrderViaMobile');
 const getTransactionDetails = require('../../controllers/admin/getTransactionDetails');
 const getUserDetails = require('../../controllers/admin/getUserDetails');
+const getAllSxsTxnOrder = require('../../controllers/admin/getAllSxsTxnOrder');
 
 adminRouter
 .post('/add-a-dish',addADish)
@@ -25,6 +26,7 @@ adminRouter
 .get('/get-completed-orders/:orderType',getCompletedOrders)
 .get('/transaction/:orderId',getTransactionDetails)
 .get('/user/:userId',getUserDetails)
+.get('/sxs-txn-orders',getAllSxsTxnOrder)
 
 module.exports = adminRouter
 
