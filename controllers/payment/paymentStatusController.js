@@ -5,12 +5,11 @@ const PaytmChecksum = require("./PaytmChecksum");
 const JWT = require('jsonwebtoken');
 const Transaction = require("../../models/Transaction");
 const { PAYTM_M_KEY, FRONTEND_URL, REFRESH_TOKEN_SECRET } = require("../../variables");
+const publishToQueue = require("../../queue/producer");
 
 const paymentStatusController = async (req,res) => {
 
-    const {refresh} = req.cookies
-    console.log(refresh);
-    
+    const {refresh} = req.cookies    
     let mobile;
 
     if(!refresh){
@@ -82,18 +81,10 @@ const paymentStatusController = async (req,res) => {
       transactionDate: TXNDATE || today.toISOString(),
     };
 
-    let paymentStatus = 'PNDG'
-    const response = req.body
-    
-    if(response.STATUS == 'TXN_SUCCESS')
-        paymentStatus = "SXS"
-    if(response.STATUS == 'TXN_FAILURE')
-        paymentStatus = "FLD"
+    await publishToQueue(data)
+    console.log('🚀 Data send to the queue.')
 
-    await Order.findByIdAndUpdate(response.ORDERID,{paymentStatus,orderStatus: paymentStatus == 'SXS' ? "PNDG" : "FLD"})
-    await Transaction.create(data)
-
-    res.redirect(301,`${FRONTEND_URL}/order/${response.ORDERID}`)
+    res.redirect(301,`${FRONTEND_URL}/order/${data.orderId}`)
 }
 
 module.exports = paymentStatusController

@@ -9,6 +9,8 @@ const getCatalogue = require('../../controllers/admin/getCatalogue');
 const getCompletedOrders = require('../../controllers/admin/getCompletedOrders');
 const getDishDetails = require('../../controllers/admin/getDishDetails');
 const getOrderViaMobile = require('../../controllers/admin/getOrderViaMobile');
+const getTransactionDetails = require('../../controllers/admin/getTransactionDetails');
+const getUserDetails = require('../../controllers/admin/getUserDetails');
 
 adminRouter
 .post('/add-a-dish',addADish)
@@ -21,6 +23,8 @@ adminRouter
 .get('/get-order',getOrderViaMobile)
 .get('/get-all-today-orders',getAllTodaysOrdersViaREST)
 .get('/get-completed-orders/:orderType',getCompletedOrders)
+.get('/transaction/:orderId',getTransactionDetails)
+.get('/user/:userId',getUserDetails)
 
 module.exports = adminRouter
 
