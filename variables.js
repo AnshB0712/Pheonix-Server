@@ -17,5 +17,6 @@ module.exports = {
     PAYTM_M_KEY : process.env.PAYTM_M_KEY,
     PAYTM_M_ID : process.env.PAYTM_M_ID,
     FRONTEND_URL : process.env.FRONTEND_URL,
+    DASHBOARD_URL : process.env.DASHBOARD_URL,
     BACKEND_URL : process.env.BACKEND_URL
 }
