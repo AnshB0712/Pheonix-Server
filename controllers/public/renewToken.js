@@ -16,7 +16,7 @@ const renewToken = async (req,res) => {
     
     JWT.verify(refresh,REFRESH_TOKEN_SECRET,function(err,decodedToken){
         if(err)
-            throw ForbiddenError('Token is expired')
+            throw new ForbiddenError('Token is expired')
             
         decode = decodedToken;
     })
@@ -25,7 +25,9 @@ const renewToken = async (req,res) => {
         targetUser = await User.findOne({mobile: decode.mobile})
         ACCESS_TOKEN = JWT.sign({
             role: targetUser.role,
-            mobile: targetUser.mobile
+            mobile: targetUser.mobile,
+            name: targetUser.name,
+            userId: targetUser._id
         },ACCESS_TOKEN_SECRET,{expiresIn: ACCESS_TOKEN_EXP})
 
     }

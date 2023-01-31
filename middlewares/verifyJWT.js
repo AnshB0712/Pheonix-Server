@@ -2,7 +2,7 @@ const JWT = require('jsonwebtoken');
 const { ForbiddenError, UnAuthorizedError } = require('../errors');
 const { ACCESS_TOKEN_SECRET } = require('../variables');
 
-const verifyJWT = async (req,res,next) => {
+const verifyJWT = (req,_,next) => {
     const token = req.headers?.authorization?.split(' ')[1]
     if(!token)
     throw new UnAuthorizedError("Token is not present, Please login/signup!")
