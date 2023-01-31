@@ -1,7 +1,7 @@
 const Order = require("../../models/Order")
 
 const getAllOrders = async (req,res) => {
-    const {page} = req.params
+    const {page} = req.query
     const {userId} = req.user
     const limit = 10
     const pageInNumberType = Number(page)
