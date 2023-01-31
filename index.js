@@ -1,6 +1,5 @@
 require('express-async-errors');
 const { FRONTEND_URL, DASHBOARD_URL } = require('./variables');
-console.log(FRONTEND_URL, DASHBOARD_URL)
 const express = require('express');
 const app = express()
 const cookieParser = require('cookie-parser');

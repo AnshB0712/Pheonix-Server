@@ -1,7 +1,8 @@
 const Order = require("../../models/Order")
 
 const getAllOrders = async (req,res) => {
-    const {userId,page} = req.query
+    const {page} = req.params
+    const {userId} = req.user
     const limit = 10
     const pageInNumberType = Number(page)
     const totalOrders = await Order.countDocuments({orderBy: userId})

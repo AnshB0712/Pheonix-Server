@@ -3,7 +3,8 @@ const { PAYTM_M_KEY, PAYTM_M_ID, BACKEND_URL } = require('../../variables');
 const PaytmChecksum = require('./PaytmChecksum');
 
 const paymentController = (req,res) => {
-  const {orderId,userId,amount} = req.body
+  const {orderId,amount} = req.body
+  const {userId} = req.user
   var paytmParams = {};
 
 paytmParams.body = {
