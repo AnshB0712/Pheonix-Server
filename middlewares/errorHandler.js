@@ -12,7 +12,7 @@ const errorHandler = (err,req,res,next) => {
     return res.status(400).json({message: err.message})
 
     if(err.name === "AxiosError")
-    return res.status(err.response.data?.responseCode ?? err.response.data?.status).json({message: err.response.data.message})
+    return res.status(err.response?.data?.responseCode ?? err.response?.data?.status).json({message: err.response?.data?.message})
 
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({err:err.data,message: "Something went wrong!"+err.message})
 }
