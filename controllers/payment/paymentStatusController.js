@@ -1,11 +1,9 @@
-const { ForbiddenError } = require("../../errors");
-const Order = require("../../models/Order")
-const User = require("../../models/User");
+const { ForbiddenError,BadRequestError } = require("../../errors");
 const PaytmChecksum = require("./PaytmChecksum");
+const User = require("../../models/User");
 const JWT = require('jsonwebtoken');
-const Transaction = require("../../models/Transaction");
 const { PAYTM_M_KEY, FRONTEND_URL, REFRESH_TOKEN_SECRET } = require("../../variables");
-const publishToQueue = require("../../queue/producer");
+const {publishToPaymentsQueue} = require("../../queue/producer");
 
 const paymentStatusController = async (req,res) => {
 
@@ -81,10 +79,10 @@ const paymentStatusController = async (req,res) => {
       transactionDate: TXNDATE || today.toISOString(),
     };
 
-    await publishToQueue(data)
+    await publishToPaymentsQueue(data)
     console.log('🚀 Data send to the queue.')
 
-    res.redirect(301,`${FRONTEND_URL}/order/${data.orderId}`)
+    res.redirect(301,`${'http://localhost:8000'}/order/${data.orderId}`)
 }
 
 module.exports = paymentStatusController

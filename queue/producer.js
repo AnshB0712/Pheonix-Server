@@ -1,13 +1,17 @@
-const { channels } = require("../config/connectToQueue")
+const { channels,exchangeName } = require("../config/connectToQueue")
 
-const publishToQueue = async (data) => {
+const publishToPaymentsQueue = async (data) => {
     try {
         console.log(data)
-        await channels.payment.sendToQueue('payment-stag',Buffer.from(JSON.stringify(data)))
+        await channels.paymentsChannel.publish(exchangeName,'',Buffer.from(JSON.stringify(data)),{
+            headers: {
+                type:'payment'
+            }
+        })
     } catch (error) {
         console.log(error)
         throw new Error('--- Q-Publisher Error ---')
     }
 }
 
-module.exports = publishToQueue
+module.exports = {publishToPaymentsQueue}
