@@ -1,31 +1,58 @@
 const amqplib = require('amqplib');
 const Order = require('../models/Order');
 const Transaction = require('../models/Transaction');
+const { RABBITMQ_URL } = require('../variables');
 
 let channels = {}
+const exchangeName = 'pheonix'
+const paymentQName = 'payment-stag';
+const ordersQName = 'order-stag';
+
 const connectToQueue = async () => {
     try {
-        const queueName = 'payment-stag';
-        const queueConnection = await amqplib.connect('amqps://lwvhzjou:L1_1-46BwKIOR5j5jMsFVsR1cB75JVwl@puffin.rmq2.cloudamqp.com/lwvhzjou');
-        paymentQueue(queueConnection,queueName);
+        const queueConnection = await amqplib.connect(RABBITMQ_URL);
+
+        channels.paymentsChannel = await queueConnection.createChannel();
+        channels.ordersChannel = await queueConnection.createChannel();
+
+        await paymentsQueue(paymentQName);
+        await ordersQueue(ordersQName);
     } catch (error) {
         console.log(error)
         throw new Error('Rabbit-MQ Connection Error')
     }
 }
 
-const paymentQueue = async (connection,name) => {
-    const paymentChannel = await connection.createChannel()
-    await paymentChannel.assertQueue(name)
-    channels.payment = paymentChannel;
+const paymentsQueue = async (name) => {
+    
+    try {
+    
+        await channels.paymentsChannel.assertExchange(exchangeName,'headers')
+        await channels.paymentsChannel.assertQueue(name)
+        channels.paymentsChannel.bindQueue(name,exchangeName,'',{'type':'payment','x-match':'all'})
+        await paymentsConsumer(name)
+    } catch (e) {
+        console.log(e)
+    }
 
-    await paytmConsumer(paymentChannel,name)
+}
+const ordersQueue = async (name) => {
+    try {
+        await channels.paymentsChannel.assertExchange(exchangeName,'headers')
+        await channels.paymentsChannel.assertQueue(name)
+        channels.ordersChannel.bindQueue(name,exchangeName,'',{'type':'order','x-match':'all'})
+    } catch (e) {
+        console.log(e)
+    }
 
 }
 
-const paytmConsumer = async (channel,name) => {
+const paymentsConsumer = async (name) => {
     try {
-        channel.consume(name,async (data) => {
+        channels.paymentsChannel.consume(name,async (data) => {
+
+            if(!data) return;
+
             let paymentStatus = 'PNDG'
             const response = JSON.parse(data.content.toString())
                 
@@ -36,12 +63,26 @@ const paytmConsumer = async (channel,name) => {
 
             await Order.findByIdAndUpdate(response.orderId,{paymentStatus,orderStatus: paymentStatus == 'SXS' ? "PNDG" : "FLD"})
             await Transaction.create(response)
+
+            const order = await Order.findById(response.orderId);
+
+            console.log(order)
+
+            channels.ordersChannel.publish(exchangeName,'',Buffer.from(JSON.stringify(order)),{
+                headers: {type:'order'},
+                persistent: true
+            })
+            console.log('🚀 Order send to the queue.')
             
-            channel.ack(data)
+            channels.paymentsChannel.ack(data)
             console.log('🚀 Data consumed by the queue.')
         })
-    } catch (e) {
-        console.log(e)
+    } catch (error) {
+        console.log(error)
     }
 }
-module.exports = {connectToQueue,channels}
+
+
+
+
+module.exports = {connectToQueue,channels,exchangeName,ordersQName}
