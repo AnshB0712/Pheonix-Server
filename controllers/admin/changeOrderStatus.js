@@ -1,11 +1,20 @@
-const Order = require("../../models/Order")
+const { channels, ordersQName } = require("../../config/connectToQueue")
+const Order = require("../../models/Order");
+const { orderConsumer } = require("./getAllTodaysOrdersViaSocket");
 
-const changeOrderStatus = async (req,res) => {
-    const {id,orderStatus} = req.body
+const changeOrderStatus = async (req, res) => {
+  try {
+    // Extract the message id and new order status from the request body
+    const { id, orderStatus,deliveryTag } = req.body;
+    channels.ordersChannel.ack({fields: { ...orderConsumer,deliveryTag }});
     await Order.findByIdAndUpdate(id,{orderStatus})
-    res.status(200).json({
-        message: `Order with ID ${id} got it's status changed to ${orderStatus}`,
-    })
-}
+    res.status(204).send();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: 'An error occurred while updating the order status',
+    });
+  }
+};
 
 module.exports = changeOrderStatus

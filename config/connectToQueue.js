@@ -8,6 +8,7 @@ const exchangeName = 'pheonix'
 const paymentQName = 'payment-stag';
 const ordersQName = 'order-stag';
 
+
 const connectToQueue = async () => {
     try {
         const queueConnection = await amqplib.connect(RABBITMQ_URL);
@@ -70,7 +71,8 @@ const paymentsConsumer = async (name) => {
 
             channels.ordersChannel.publish(exchangeName,'',Buffer.from(JSON.stringify(order)),{
                 headers: {type:'order'},
-                persistent: true
+                persistent: true,
+                messageId: response.orderId
             })
             console.log('🚀 Order send to the queue.')
             
@@ -85,4 +87,4 @@ const paymentsConsumer = async (name) => {
 
 
 
-module.exports = {connectToQueue,channels,exchangeName,ordersQName}
+module.exports = {connectToQueue,channels,exchangeName,ordersQName,orderConsumer}

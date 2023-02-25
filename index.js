@@ -31,7 +31,7 @@ const errorHandler = require("./middlewares/errorHandler");
 
 const start = require('./config/start');
 
-const getAllTodaysOrdersViaSocket = require("./controllers/admin/getAllTodaysOrdersViaSocket");
+const {getAllTodaysOrdersViaSocket} = require("./controllers/admin/getAllTodaysOrdersViaSocket");
 const paymentStatusController = require("./controllers/payment/paymentStatusController");
 
 

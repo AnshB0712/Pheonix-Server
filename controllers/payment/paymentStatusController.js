@@ -82,7 +82,7 @@ const paymentStatusController = async (req,res) => {
     await publishToPaymentsQueue(data)
     console.log('🚀 Data send to the queue.')
 
-    res.redirect(301,`${'http://localhost:8000'}/order/${data.orderId}`)
+    res.redirect(301,`${FRONTEND_URL}/order/${data.orderId}`)
 }
 
 module.exports = paymentStatusController
