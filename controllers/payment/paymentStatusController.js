@@ -17,7 +17,6 @@ const paymentStatusController = async (req,res) => {
     JWT.verify(refresh,REFRESH_TOKEN_SECRET,function(err,decoded){
         if(err)
             throw ForbiddenError('Token is Expired')
-        console.log(decoded)
         mobile = decoded.mobile
     })
 

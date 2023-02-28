@@ -6,8 +6,8 @@ const changeOrderStatus = async (req, res) => {
   try {
     // Extract the message id and new order status from the request body
     const { id, orderStatus,deliveryTag } = req.body;
-    channels.ordersChannel.ack({fields: { ...orderConsumer,deliveryTag }});
     await Order.findByIdAndUpdate(id,{orderStatus})
+    channels.ordersChannel.ack({fields: { ...orderConsumer,deliveryTag }});
     res.status(204).send();
   } catch (error) {
     console.error(error);
