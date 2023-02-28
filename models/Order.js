@@ -23,6 +23,10 @@ const Order = new mongoose.Schema({
         enum: ["SXS","PNDG","FLD"],
         default: "PNDG"
     },
+    orderFailReason: {
+        type: String,
+        default: ''
+    },
     amount: {
         type: Number,
         required: [true,"Amount is required to create orders!"]
@@ -53,8 +57,8 @@ const Order = new mongoose.Schema({
     ],
     paymentStatus: {
         type: String,
-        enum: ["SXS","PNDG","FLD"],
-        default: "PNDG"
+        enum: ["SXS","PNDG","FLD","PRCSNG"],
+        default: "PRCSNG"
     }
 },{
     timestamps: true

@@ -54,30 +54,48 @@ const paymentsConsumer = async (name) => {
 
             if(!data) return;
 
-            let paymentStatus = 'PNDG'
+            let paymentStatus = 'PRCSNG'
+            let orderStatus = 'PNDG'
+            let orderFailReason = ''
             const response = JSON.parse(data.content.toString())
-                
-            if(response.status == 'TXN_SUCCESS')
-                paymentStatus = "SXS"
-            if(response.status == 'TXN_FAILURE')
-                paymentStatus = "FLD"
 
-            await Order.findByIdAndUpdate(response.orderId,{paymentStatus,orderStatus: paymentStatus == 'SXS' ? "PNDG" : "FLD"})
+            if(response.responseCode == 141){
+                response.paymentMode = 'NA'
+                response.bankName = 'NA'
+                response.gatewayName = 'NA'
+                response.bankTransactionId = 'NA'
+            }
+                
+            if(response.status == 'TXN_SUCCESS'){
+                paymentStatus = "SXS"
+                orderStatus = 'PNDG'
+            }
+            if(response.status == 'TXN_FAILURE'){
+                paymentStatus = "FLD"
+                orderStatus = 'FLD'
+                orderFailReason = response.responseMessage
+            }
+            if(response.status == 'PENDING'){
+                paymentStatus = "PNDG"
+                orderStatus = 'PNDG'
+            }
+
+            await Order.findByIdAndUpdate(response.orderId,{paymentStatus,orderStatus,orderFailReason})
             await Transaction.create(response)
 
             const order = await Order.findById(response.orderId);
 
-            console.log(order)
-
-            channels.ordersChannel.publish(exchangeName,'',Buffer.from(JSON.stringify(order)),{
-                headers: {type:'order'},
-                persistent: true,
-                messageId: response.orderId
-            })
-            console.log('🚀 Order send to the queue.')
+            if(paymentStatus === "SXS"){
+                channels.ordersChannel.publish(exchangeName,'',Buffer.from(JSON.stringify(order)),{
+                    headers: {type:'order'},
+                    persistent: true,
+                    messageId: response.orderId
+                })
+                console.log('🚀 Order sent to the Order-Q')
+            }
             
             channels.paymentsChannel.ack(data)
-            console.log('🚀 Data consumed by the queue.')
+            console.log('🚀 Payment consumed by the Payment-Q.')
         })
     } catch (error) {
         console.log(error)
@@ -87,4 +105,4 @@ const paymentsConsumer = async (name) => {
 
 
 
-module.exports = {connectToQueue,channels,exchangeName,ordersQName,orderConsumer}
+module.exports = {connectToQueue,channels,exchangeName,ordersQName}
