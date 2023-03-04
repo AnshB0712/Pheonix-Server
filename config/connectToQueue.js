@@ -17,7 +17,6 @@ const connectToQueue = async () => {
         channels.ordersChannel = await queueConnection.createChannel();
 
         await paymentsQueue(paymentQName);
-        await ordersQueue(ordersQName);
     } catch (error) {
         console.log(error)
         throw new Error('Rabbit-MQ Connection Error')
@@ -32,16 +31,6 @@ const paymentsQueue = async (name) => {
         await channels.paymentsChannel.assertQueue(name)
         channels.paymentsChannel.bindQueue(name,exchangeName,'',{'type':'payment','x-match':'all'})
         await paymentsConsumer(name)
-    } catch (e) {
-        console.log(e)
-    }
-
-}
-const ordersQueue = async (name) => {
-    try {
-        await channels.paymentsChannel.assertExchange(exchangeName,'headers')
-        await channels.paymentsChannel.assertQueue(name)
-        channels.ordersChannel.bindQueue(name,exchangeName,'',{'type':'order','x-match':'all'})
     } catch (e) {
         console.log(e)
     }
@@ -83,17 +72,6 @@ const paymentsConsumer = async (name) => {
             await Order.findByIdAndUpdate(response.orderId,{paymentStatus,orderStatus,orderFailReason})
             await Transaction.create(response)
 
-            const order = await Order.findById(response.orderId);
-
-            if(paymentStatus === "SXS"){
-                channels.ordersChannel.publish(exchangeName,'',Buffer.from(JSON.stringify(order)),{
-                    headers: {type:'order'},
-                    persistent: true,
-                    messageId: response.orderId
-                })
-                console.log('🚀 Order sent to the Order-Q')
-            }
-            
             channels.paymentsChannel.ack(data)
             console.log('🚀 Payment consumed by the Payment-Q.')
         })
