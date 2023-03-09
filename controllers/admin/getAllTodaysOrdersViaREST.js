@@ -1,6 +1,13 @@
 const Order = require("../../models/Order");
 
 const getAllTodaysOrdersViaREST = async (req,res) => {
+    const { arrayOfOrderIds } = req.query
+    const ids = arrayOfOrderIds.split(',')
+
+    if(!arrayOfOrderIds?.split(',')) return res.json({
+        message: 'request done successfully.',
+        data: []
+    })
 
     const startOfToday = new Date();
     startOfToday.setHours(0,0,0,0)
@@ -15,10 +22,18 @@ const getAllTodaysOrdersViaREST = async (req,res) => {
         orderStatus: 'PNDG',
         paymentStatus: 'SXS'
     }).sort({createdAt: -1})
+    
+    const filteredData = data.reduce((acc, order) => {
+        if(ids.includes(order._id.toString())) return acc
+        else return [...acc, order];
+      }, [])
+
+    console.log(filteredData,'filteredData')
+    console.log(ids)
 
     res.json({
         message: 'request done successfully.',
-        data
+        data: filteredData
     })
 }
 

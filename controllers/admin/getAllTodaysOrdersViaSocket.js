@@ -1,21 +1,20 @@
-const { channels, ordersQName } = require("../../config/connectToQueue")
-
-let orderConsumer;
+const Order = require("../../models/Order")
 
 const getAllTodaysOrdersViaSocket = async (socket) => {
-  orderConsumer = await channels.ordersChannel.consume(ordersQName,(data) => {
-        try {
-            const order = JSON.parse(data.content.toString())
-            const deliveryTag = data.fields.deliveryTag;
-            socket.emit('new-order',{...order,deliveryTag})
-        } catch (error) {
-            console.log(error)
-        }
-    })
-console.log(orderConsumer,'orderConsumer')
+    try {
+        const changeStream = Order.watch([], { fullDocument: 'updateLookup' })
+        changeStream.on('change',(data) => {
+            if(data.operationType === 'update' && data?.updateDescription?.updatedFields?.paymentStatus === 'SXS'){
+                socket.emit('new-order',data.fullDocument)
+            }
+        })
+    } catch (error) {
+        console.log(error)
+        changeStream.close()
+    }
 }
 
-module.exports = {getAllTodaysOrdersViaSocket,orderConsumer}
+module.exports = {getAllTodaysOrdersViaSocket}
 
     //     const {operationType} = data
     //     if(
