@@ -10,6 +10,7 @@ const start = async (app,port) => {
         console.log('-------MONGO-DB connected-------')
         app.listen(port,() => console.log('App is listening at port '+port))
     } catch (e) {
+        console.log(e)
     }
 }
 
