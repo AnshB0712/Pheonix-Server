@@ -45,7 +45,7 @@ io.of('admin/todays-orders')
 
 
 app.use(require('cors')({
-  origin: [FRONTEND_URL,DASHBOARD_URL'http://localhost:5173'],
+  origin: [FRONTEND_URL,DASHBOARD_URL,'http://localhost:5173'],
   credentials: true
 }))
 
