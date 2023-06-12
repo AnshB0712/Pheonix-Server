@@ -43,6 +43,12 @@ io.of('admin/todays-orders')
   getAllTodaysOrdersViaSocket(socket)
 });
 
+
+app.use(require('cors')({
+  origin: [FRONTEND_URL,DASHBOARD_URL,'http://localhost:5173'],
+  credentials: true
+}))
+
 // TO INSPECT THE REQUEST FOR DEVELOPMENT PURPOSE
 app.use((req,res) => console.log({
   type: req.method,
