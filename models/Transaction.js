@@ -15,11 +15,9 @@ const Transaction = new mongoose.Schema({
     },
     gatewayName: {
         type: String,
-        required: true
     },
     bankName: {
         type: String,
-        required: true
     },
     paymentMode: {
         type: String,
@@ -47,11 +45,9 @@ const Transaction = new mongoose.Schema({
     },
     bankTransactionId: {
         type: String,
-        required: true
     },
     transactionDate: {
         type: Date,
-        required: true
     },
 },{timestamps: true})
 

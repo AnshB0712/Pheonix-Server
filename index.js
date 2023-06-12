@@ -5,15 +5,10 @@ const app = express()
 const cookieParser = require('cookie-parser');
 
 const { createServer } = require("http");
-const { Server } = require("socket.io");
+const { Server: ServerFromSocketIO } = require("socket.io");
 
 const httpServer = createServer(app);
-const io = new Server(httpServer, {  
-    cors: {
-      origin: [FRONTEND_URL,DASHBOARD_URL],
-      credentials: true
-      }
-});
+const io = new ServerFromSocketIO(httpServer);
 
 const publicRouter = require("./routes/public");
 const authRouter = require('./routes/auth');
@@ -24,7 +19,6 @@ const paymentRouter = require("./routes/payment");
 
 const isUserANormalUser = require("./middlewares/isUserANormalUser");
 const isUserAdmin = require("./middlewares/isUserAdmin");
-const { logger } = require("./middlewares/logger");
 const socketMiddleware = require("./middlewares/socketMiddleware");
 const verifyJWT = require("./middlewares/verifyJWT");
 const errorHandler = require("./middlewares/errorHandler");
@@ -35,6 +29,12 @@ const {getAllTodaysOrdersViaSocket} = require("./controllers/admin/getAllTodaysO
 const paymentStatusController = require("./controllers/payment/paymentStatusController");
 
 
+app.use(require('cors')({
+  origin: [FRONTEND_URL,DASHBOARD_URL],
+  credentials: true
+}))
+
+
 //---- INITIALIZE THE SOCKET CONNNECTION ----//
 io.of('admin/todays-orders')
 .use((socket, next) => socketMiddleware(socket,next))
@@ -43,13 +43,12 @@ io.of('admin/todays-orders')
   getAllTodaysOrdersViaSocket(socket)
 });
 
-
-app.use(require('cors')({
-  origin: [FRONTEND_URL,DASHBOARD_URL],
-  credentials: true
+// TO INSPECT THE REQUEST FOR DEVELOPMENT PURPOSE
+app.use((req,res) => console.log({
+  type: req.method,
+  path: req.path,
 }))
 
-app.use(logger)
 
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))

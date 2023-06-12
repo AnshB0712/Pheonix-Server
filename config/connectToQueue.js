@@ -47,13 +47,6 @@ const paymentsConsumer = async (name) => {
             let orderStatus = 'PNDG'
             let orderFailReason = ''
             const response = JSON.parse(data.content.toString())
-
-            if(response.responseCode == 141){
-                response.paymentMode = 'NA'
-                response.bankName = 'NA'
-                response.gatewayName = 'NA'
-                response.bankTransactionId = 'NA'
-            }
                 
             if(response.status == 'TXN_SUCCESS'){
                 paymentStatus = "SXS"

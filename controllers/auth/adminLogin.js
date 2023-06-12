@@ -10,7 +10,7 @@ const adminLogin = async (req,res) => {
         throw new BadRequestError('username and password are required.')
     }
 
-    const [Admin] = await Adminuser.find({username})
+    const Admin = await Adminuser.findOne({username})
 
     if(!Admin){
         throw new UnAuthorizedError('No admin registered with this username')
