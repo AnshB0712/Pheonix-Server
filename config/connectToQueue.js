@@ -1,7 +1,7 @@
 const amqplib = require('amqplib');
 const Order = require('../models/Order');
 const Transaction = require('../models/Transaction');
-const { RABBITMQ_URL, PAYTM_M_ID, PAYTM_M_KEY } = require('../letiables');
+const { RABBITMQ_URL, PAYTM_M_ID, PAYTM_M_KEY } = require('../variables');
 const https = require('https');
 const PaytmChecksum = require('../controllers/payment/PaytmChecksum');
 
