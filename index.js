@@ -50,11 +50,10 @@ app.use(require('cors')({
 }))
 
 // TO INSPECT THE REQUEST FOR DEVELOPMENT PURPOSE
-app.use((req,res) => console.log({
-  type: req.method,
-  path: req.path,
-}))
-
+app.use((req,res,next) => { 
+  console.log({type: req.method, path: req.path})
+  next()
+})
 
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
