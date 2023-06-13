@@ -5,25 +5,27 @@ const getOrderInfo = async (req,res) => {
     const { orderId } = req.query
     if(!orderId) throw new BadRequestError()
 
-    while(true){
-        const order = await Order.findOne({_id: orderId})
+    const order = await Order.findOne({_id: orderId})
 
-        if(!order){ 
-            throw new BadRequestError()
-            break;
-        }
+    
+    if(!order) throw new BadRequestError()
 
-        if(order.paymentStatus !== 'PRCSNG'){
-            res.status(200).json({
-                message:"Order Found Successfully!",
-                data: order
-            })
-            break;
-        }
+    let flag = true;
+    const duration = 1 * 60 * 1000;
 
-        await new Promise(resolve => setTimeout(resolve, 2000));
+    setTimeout(() => {
+    flag = false;
+    }, duration);
 
-    }
+    while (flag) {
+        if(order.paymentStatus === 'PRCSNG') continue;
+        if (!flag || order.paymentStatus !== 'PRCSNG') break;
+      }
+    
+    res.status(200).json({
+        message:"Order Found Successfully!",
+        data: order
+    })
     
 }
 

@@ -28,13 +28,6 @@ const start = require('./config/start');
 const {getAllTodaysOrdersViaSocket} = require("./controllers/admin/getAllTodaysOrdersViaSocket");
 const paymentStatusController = require("./controllers/payment/paymentStatusController");
 
-
-app.use(require('cors')({
-  origin: [FRONTEND_URL,DASHBOARD_URL],
-  credentials: true
-}))
-
-
 //---- INITIALIZE THE SOCKET CONNNECTION ----//
 io.of('admin/todays-orders')
 .use((socket, next) => socketMiddleware(socket,next))
@@ -45,13 +38,13 @@ io.of('admin/todays-orders')
 
 
 app.use(require('cors')({
-  origin: [FRONTEND_URL,DASHBOARD_URL,'http://localhost:5173'],
+  origin: [FRONTEND_URL,DASHBOARD_URL],
   credentials: true
 }))
 
 // TO INSPECT THE REQUEST FOR DEVELOPMENT PURPOSE
-app.use((req,res,next) => { 
-  console.log({type: req.method, path: req.path})
+app.use((req,res,next) =>{ 
+  console.log({type: req.method,path: req.path})
   next()
 })
 
