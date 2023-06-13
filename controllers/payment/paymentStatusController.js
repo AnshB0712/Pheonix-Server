@@ -1,4 +1,4 @@
-const { ForbiddenError,BadRequestError } = require("../../errors");
+const { ForbiddenError,BadRequestError, UnAuthorizedError } = require("../../errors");
 const PaytmChecksum = require("./PaytmChecksum");
 const User = require("../../models/User");
 const JWT = require('jsonwebtoken');
