@@ -2,7 +2,7 @@ const { ForbiddenError,BadRequestError } = require("../../errors");
 const PaytmChecksum = require("./PaytmChecksum");
 const User = require("../../models/User");
 const JWT = require('jsonwebtoken');
-const { PAYTM_M_KEY, FRONTEND_URL, REFRESH_TOKEN_SECRET } = require("../../variables");
+const { PAYTM_M_KEY, FRONTEND_URL, REFRESH_TOKEN_SECRET, PAYTM_PENDING_STATUS } = require("../../variables");
 const {publishToPaymentsQueue, publishToPendingPaymentsQueue} = require("../../queue/producer");
 const Transaction = require("../../models/Transaction");
 
@@ -81,7 +81,7 @@ const paymentStatusController = async (req,res) => {
 
     await Transaction.create(data)
 
-    if(data.responseCode == 294){ // PAYTM STATUS CODE FOR PENDING PAYMENTS
+    if(PAYTM_PENDING_STATUS.includes(data.responseCode)){ // PAYTM STATUS CODE FOR PENDING PAYMENTS
       await publishToPendingPaymentsQueue(data);
     }else{
       await publishToPaymentsQueue(data);

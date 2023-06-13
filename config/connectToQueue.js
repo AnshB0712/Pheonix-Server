@@ -101,6 +101,8 @@ const pendingPaymentsConsumer = async (name) => {
 
             const response = JSON.parse(data.content.toString())
 
+            console.log(response,'pending-payment-Q')
+
             /* initialize an object */
             let paytmParams = {};
 
@@ -157,17 +159,20 @@ const pendingPaymentsConsumer = async (name) => {
                     post_res.on('end', async function(){
                         try {
                             const serverResponse = JSON.parse(statusResponse)
+
+                            console.log(serverResponse,'PayTM Status');
+
                             const statusResponseCode =  serverResponse?.body?.resultInfo?.resultCode;
                             const statusResponseMsg =  serverResponse?.body?.resultInfo?.resultMsg;
                             const statusResponseStatus =  serverResponse?.body?.resultInfo?.resultStatus;
 
-                            if(statusResponseCode == 400 || statusResponse == 402){
+                            if(statusResponseCode == 400 || statusResponse == 402 || statusResponse == 294){
                                 channels.pendingPaymentsChannel.nack(data,false,true)
                             }else{
                                 await Order.findByIdAndUpdate(response.orderId,{
-                                    paymentStatus: statusResponse == '01' ? 'SXS':'FLD',
-                                    orderStatus: statusResponse == '01' ? 'PND':'FLD',
-                                    orderFailReason: statusResponse != '01' ? statusResponseMsg : ''
+                                    paymentStatus: statusResponseCode == '01' ? 'SXS':'FLD',
+                                    orderStatus: statusResponseCode == '01' ? 'PND':'FLD',
+                                    orderFailReason: statusResponseCode != '01' ? statusResponseMsg : ''
                                 })
                                 await Transaction.findOneAndUpdate({transactionId: response.transactionId},{
                                     status: statusResponseStatus,
