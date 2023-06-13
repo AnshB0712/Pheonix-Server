@@ -8,7 +8,12 @@ const { createServer } = require("http");
 const { Server: ServerFromSocketIO } = require("socket.io");
 
 const httpServer = createServer(app);
-const io = new ServerFromSocketIO(httpServer);
+const io = new ServerFromSocketIO(httpServer,{
+  cors: {
+    origin: [FRONTEND_URL,DASHBOARD_URL],
+    credentials: true
+  }
+});
 
 const publicRouter = require("./routes/public");
 const authRouter = require('./routes/auth');
@@ -27,13 +32,6 @@ const start = require('./config/start');
 
 const {getAllTodaysOrdersViaSocket} = require("./controllers/admin/getAllTodaysOrdersViaSocket");
 const paymentStatusController = require("./controllers/payment/paymentStatusController");
-
-
-app.use(require('cors')({
-  origin: [FRONTEND_URL,DASHBOARD_URL],
-  credentials: true
-}))
-
 
 //---- INITIALIZE THE SOCKET CONNNECTION ----//
 io.of('admin/todays-orders')
