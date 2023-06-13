@@ -1,10 +1,11 @@
-const { UnAuthorizedError } = require("../errors")
+const {UnAuthorizedError} = require('../errors');
 
-const isUserAdmin = (req,res,next) => {
-    if(req.user.role === 2004)
-    throw new UnAuthorizedError("You are not authorized to access this route!")
+const isUserAdmin = (req, res, next) => {
+	if (req.user.role === 2004) {
+		throw new UnAuthorizedError('You are not authorized to access this route!');
+	}
 
-    next()
-}
+	next();
+};
 
-module.exports = isUserAdmin
+module.exports = isUserAdmin;

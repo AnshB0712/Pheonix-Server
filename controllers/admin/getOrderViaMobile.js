@@ -1,38 +1,38 @@
-const { BadRequestError } = require('../../errors')
-const Order = require('../../models/Order')
+const {BadRequestError} = require('../../errors');
+const Order = require('../../models/Order');
 
+const start = new Date();
+start.setHours(0, 0, 0, 0);
 
-let start = new Date();
-start.setHours(0,0,0,0);
+const end = new Date();
+end.setHours(23, 59, 59, 999);
 
-let end = new Date();
-end.setHours(23,59,59,999);
+const getOrderViaMobile = async (req, res) => {
+	const {mobile} = req.query;
 
-const getOrderViaMobile = async (req,res) => {
-    const { mobile } = req.query
+	if (!mobile) {
+		throw new BadRequestError('mobile number is required to get its orders.');
+	}
 
-    if(!mobile)
-        throw new BadRequestError('mobile number is required to get its orders.')
-    
-    const data = await Order.find({
-        orderByMobile: mobile,
-        orderStatus: 'PNDG',
-        paymentStatus:'SXS',
-        createdAt:{
-            '$gte': start,
-            '$lte': end
-        },
-        updatedAt:{
-            
-            '$gte': start,
-            '$lte': end
-        }
-    })
+	const data = await Order.find({
+		orderByMobile: mobile,
+		orderStatus: 'PNDG',
+		paymentStatus: 'SXS',
+		createdAt: {
+			$gte: start,
+			$lte: end,
+		},
+		updatedAt: {
 
-    res.json({
-        data,
-        message: 'request done successfully.'
-    })
-}
+			$gte: start,
+			$lte: end,
+		},
+	});
 
-module.exports = getOrderViaMobile
+	res.json({
+		data,
+		message: 'request done successfully.',
+	});
+};
+
+module.exports = getOrderViaMobile;
